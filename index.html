@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Français com 3 Nativos — Criador de Conteúdo</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link href="css/style.css" rel="stylesheet" type="text/css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+
+</head>
+<body>
+
+<header>
+  <div class="logo-header">
+    <img id="headerLogo" src="" alt="" onerror="this.style.display='none'">
+    <span class="logo-text">Français com 3 Nativos</span>
+  </div>
+  <nav>
+    <button class="nav-btn active" onclick="showSection('generator',this)">✨ <span class="nav-label">Gerador</span></button>
+    <button class="nav-btn" onclick="showSection('create',this)">➕ <span class="nav-label">Criar</span></button>
+    <button class="nav-btn" onclick="showSection('quiz',this)">🎮 <span class="nav-label">Quiz</span></button>
+    <button class="nav-btn" onclick="showSection('data',this)">💾 <span class="nav-label">Dados</span></button>
+  </nav>
+</header>
+
+<main>
+
+<!-- ═══════════ GERADOR ═══════════ -->
+<section id="section-generator" class="section active">
+  <div class="hero">
+    <div class="hero-glow"></div>
+    <h1>Gere Conteúdo<br><span>Incrível</span> em Français</h1>
+    <p>Publicações prontas para o Instagram — gere, salve e baixe em 1 clique.</p>
+  </div>
+  <div class="generator-wrap">
+    <aside class="left-panel">
+      <div class="panel-card">
+        <h2>⚙️ Gerar</h2>
+        <label class="control-label">Escolha o tema</label>
+        <div class="theme-grid" id="themeGrid"></div>
+        <button class="btn-primary" id="btnGen" onclick="generatePost()">
+          <span class="spinner" id="genSp"></span>
+          <span id="genTxt">✨ Gerar Publicação</span>
+        </button>
+      </div>
+    </aside>
+    <div class="right-panel">
+      <div class="panel-card">
+        <div class="preview-header">
+          <h3>👁️ Pré-visualização <span class="badge">1080 × 1080</span></h3>
+          <div class="post-actions" id="postActions" style="display:none;position:relative;z-index:20;">
+            <button class="btn-sm btn-default" onclick="event.stopPropagation();generatePost()">🔄 Outra</button>
+            <button class="btn-sm btn-purple" onclick="event.stopPropagation();saveCurrentPost()">💾 Salvar</button>
+            <button class="btn-sm btn-green" onclick="event.stopPropagation();downloadCurrentPost()"><span class="spinner" id="dlSp"></span> ⬇️ Baixar</button>
+          </div>
+        </div>
+        <div id="postPreview">
+          <div class="empty-state"><div class="empty-icon">🖼️</div><p>Escolha um tema e clique em<br><strong>Gerar Publicação</strong></p></div>
+        </div>
+      </div>
+      <div class="saved-section">
+        <div class="saved-header">
+          <h3>📁 Publicações Salvas</h3>
+          <span class="saved-count" id="savedCount">0</span>
+        </div>
+        <div class="saved-scroll" id="savedGrid"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════ CRIAR ═══════════ -->
+<section id="section-create" class="section">
+  <div class="create-wrap">
+    <div class="create-form">
+      <h2>➕ Criar Publicação</h2>
+      <p class="subtitle-text">Preencha os campos abaixo. A publicação terá o mesmo formato visual das geradas automaticamente.</p>
+
+      <div class="form-group">
+        <label class="form-label">Tema</label>
+        <select class="form-select" id="cf-theme" onchange="livePreview()"></select>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Título Principal</label>
+        <input class="form-input" id="cf-title" type="text" placeholder="Ex: Les Sports en Français" oninput="livePreview()">
+        <span class="form-hint">Texto grande em destaque no card</span>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Subtítulo</label>
+        <input class="form-input" id="cf-subtitle" type="text" placeholder="Ex: Jouer ou Faire?" oninput="livePreview()">
+        <span class="form-hint">Texto menor abaixo do título</span>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Itens de Conteúdo <span style="color:var(--muted);font-weight:400;text-transform:none;letter-spacing:0">(cada linha = uma caixa no card)</span></label>
+        <div class="items-builder" id="itemsBuilder"></div>
+        <button class="btn-add-item" onclick="addItem()">+ Adicionar item</button>
+        <span class="form-hint">Use emojis para tornar o conteúdo mais visual</span>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Gradiente de Fundo</label>
+        <div class="gradient-grid" id="gradGrid"></div>
+        <span class="form-hint">Clique para escolher o fundo do card</span>
+      </div>
+
+      <button class="btn-primary" onclick="createPost()" style="margin-top:6px">
+        <span class="spinner" id="createSp"></span>
+        ✅ Criar e Salvar Publicação
+      </button>
+    </div>
+
+    <div class="create-preview">
+      <div class="panel-card">
+        <h3>👁️ Pré-visualização ao Vivo <span class="badge">Instagram</span></h3>
+        <div id="createPreview">
+          <div class="empty-state"><div class="empty-icon">✏️</div><p>Preencha os campos<br>para visualizar</p></div>
+        </div>
+        <div style="margin-top:12px;display:flex;gap:7px;flex-wrap:wrap">
+          <button class="btn-sm btn-green" id="btnDlCreate" style="display:none" onclick="downloadCreatePreview()">⬇️ Baixar prévia</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════ QUIZ ═══════════ -->
+<section id="section-quiz" class="section">
+  <div class="quiz-wrap">
+    <div class="quiz-header">
+      <h2>🎮 Quiz de Français</h2>
+      <p>Teste seus conhecimentos sobre cultura, gramática, e mais!</p>
+    </div>
+    <div class="quiz-themes" id="quizThemes"></div>
+    <div class="quiz-card">
+      <div class="quiz-progress-bar"><div class="quiz-progress-fill" id="qProgress" style="width:0%"></div></div>
+      <div class="quiz-body" id="quizBody"></div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════ DADOS ═══════════ -->
+<section id="section-data" class="section">
+  <div class="data-wrap">
+    <div class="data-header">
+      <h2>💾 Gerenciar Dados</h2>
+      <p>Exporte o banco de dados, importe ou gerencie suas publicações.</p>
+    </div>
+    <div class="data-stats">
+      <div class="stat-card"><h3>Publicações no BD</h3><div class="stat-num blue" id="stPosts">—</div></div>
+      <div class="stat-card"><h3>Publicações Salvas</h3><div class="stat-num purple" id="stSaved">—</div></div>
+      <div class="stat-card"><h3>Perguntas do Quiz</h3><div class="stat-num green" id="stQuiz">—</div></div>
+    </div>
+    <div class="data-actions-row">
+      <button class="btn-sm btn-green" onclick="exportData()">⬇️ Exportar data.json</button>
+      <label class="btn-sm btn-purple" style="cursor:pointer">📂 Importar data.json<input type="file" accept=".json" onchange="importData(this)" style="display:none"></label>
+      <button class="btn-sm btn-red" onclick="clearSaved()">🗑️ Limpar salvas</button>
+    </div>
+    <div class="panel-card">
+      <h3 style="font-family:'Playfair Display',serif;font-size:1rem;margin-bottom:14px">📋 Publicações no Banco de Dados</h3>
+      <div id="dbTable" style="overflow-x:auto;max-height:420px;overflow-y:auto;"></div>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<!-- MODAL -->
+<div class="modal-overlay" id="modalOverlay" onclick="maybeClose(event)">
+  <div class="modal-box">
+    <button class="modal-close" onclick="closeModal()">✕</button>
+    <div id="modalBody"></div>
+    <div class="modal-acts" id="modalActs"></div>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<!-- DISMISS OVERLAY: click outside post card to hide it -->
+<div class="post-dismiss" id="postDismiss"></div>
+
+<!-- DOWNLOAD STAGE (off-screen 1080x1080) -->
+<div id="dlStage" style="position:fixed;left:-9999px;top:-9999px;width:1080px;height:1080px;overflow:hidden;pointer-events:none;"></div>
+
+<script src="js/index.js"></script>
+</body>
+</html>
+
