@@ -252,3 +252,227 @@ main{position:relative;z-index:1;}
 @keyframes spin{to{transform:rotate(360deg)}}
 @media(max-width:580px){nav .nav-label{display:none;}}
 
+
+/* ═══════════════════════════════════════
+   EMOJI PICKER
+═══════════════════════════════════════ */
+.item-row { display:flex; align-items:center; gap:7px; margin-bottom:8px; position:relative; }
+.emoji-trigger {
+  flex-shrink:0; width:38px; height:38px; border-radius:9px;
+  background:rgba(255,255,255,.07); border:1px solid var(--border);
+  cursor:pointer; font-size:1.1rem; display:flex; align-items:center; justify-content:center;
+  transition:all .15s; color:var(--text);
+}
+.emoji-trigger:hover { background:rgba(124,58,237,.25); border-color:#7c3aed; }
+
+.emoji-picker-popup {
+  position:absolute; left:0; top:calc(100% + 6px);
+  background:var(--surface2); border:1px solid var(--border);
+  border-radius:14px; z-index:500; padding:10px;
+  box-shadow:0 16px 48px rgba(0,0,0,.7);
+  width:280px; animation:fadeIn .15s ease;
+}
+.emoji-picker-tabs {
+  display:flex; gap:4px; flex-wrap:wrap; margin-bottom:8px;
+  border-bottom:1px solid var(--border); padding-bottom:8px;
+}
+.emoji-tab {
+  background:transparent; border:1px solid transparent; border-radius:7px;
+  padding:5px 7px; cursor:pointer; font-size:1rem; transition:all .15s;
+  color:var(--text);
+}
+.emoji-tab:hover, .emoji-tab.active {
+  background:rgba(124,58,237,.25); border-color:#7c3aed;
+}
+.emoji-grid { display:none; flex-wrap:wrap; gap:3px; max-height:120px; overflow-y:auto; }
+.emoji-grid.active { display:flex; }
+.emoji-btn {
+  background:transparent; border:1px solid transparent; border-radius:7px;
+  padding:4px; cursor:pointer; font-size:1.1rem; transition:all .12s;
+  width:34px; height:34px; display:flex; align-items:center; justify-content:center;
+  color:var(--text);
+}
+.emoji-btn:hover { background:rgba(255,255,255,.1); border-color:var(--border); transform:scale(1.2); }
+
+/* ═══════════════════════════════════════
+   QUIZ SOUNDS & ANIMATIONS
+═══════════════════════════════════════ */
+@keyframes shake {
+  0%,100%{transform:translateX(0)} 15%{transform:translateX(-8px)} 30%{transform:translateX(8px)}
+  45%{transform:translateX(-6px)} 60%{transform:translateX(6px)} 75%{transform:translateX(-3px)} 90%{transform:translateX(3px)}
+}
+@keyframes bounce-pop {
+  0%{transform:scale(1)} 35%{transform:scale(1.06)} 65%{transform:scale(.97)} 100%{transform:scale(1)}
+}
+.quiz-option.shake { animation:shake .55s ease; }
+.quiz-option.bounce-pop { animation:bounce-pop .55s ease; }
+
+@keyframes particleFly {
+  0%   { opacity:1; transform:translate(0,0) scale(1); }
+  100% { opacity:0; transform:translate(var(--tx),var(--ty)) scale(0); }
+}
+.quiz-particle {
+  position:fixed; pointer-events:none; z-index:9999;
+  animation:particleFly .65s ease-out forwards;
+}
+
+/* ═══════════════════════════════════════
+   GOLD MEDAL / PERFECT SCORE
+═══════════════════════════════════════ */
+.perfect-result { position:relative; overflow:visible; }
+
+@keyframes medalPop {
+  0%   { transform:scale(0) rotate(-20deg); opacity:0; }
+  60%  { transform:scale(1.25) rotate(8deg); opacity:1; }
+  80%  { transform:scale(.92) rotate(-4deg); }
+  100% { transform:scale(1) rotate(0deg); }
+}
+@keyframes medalGlow {
+  0%,100% { text-shadow:0 0 12px #fbbf24,0 0 24px #f59e0b; }
+  50%     { text-shadow:0 0 28px #fbbf24,0 0 56px #f59e0b,0 0 80px #fde68a; }
+}
+.result-medal {
+  font-size:5rem; line-height:1; margin-bottom:10px;
+  display:inline-block;
+  animation:medalGlow 2s ease infinite;
+}
+.result-medal.medal-pop { animation:medalPop .7s cubic-bezier(.34,1.56,.64,1) forwards, medalGlow 2s 0.7s ease infinite; }
+
+.result-score.gold span {
+  background:linear-gradient(135deg,#fde68a,#f59e0b,#d97706);
+  -webkit-background-clip:text; -webkit-text-fill-color:transparent;
+  background-clip:text;
+  filter:drop-shadow(0 2px 8px rgba(251,191,36,.5));
+}
+
+.perfect-msg {
+  font-size:1.05rem; line-height:1.6; margin-bottom:16px;
+}
+.perfect-msg strong { color:#fbbf24; font-size:1.1rem; }
+.perfect-msg small { color:var(--muted); }
+
+/* Name Entry Box */
+.name-entry-box {
+  background:rgba(251,191,36,.08); border:1px solid rgba(251,191,36,.3);
+  border-radius:14px; padding:16px 18px; margin:14px 0; text-align:left;
+  animation:fadeIn .4s ease;
+}
+.name-entry-label {
+  color:rgba(255,255,255,.85); font-size:.88rem; margin:0 0 10px;
+  font-family:'DM Sans',sans-serif;
+}
+.name-entry-row { display:flex; gap:8px; }
+.name-input {
+  flex:1; background:rgba(0,0,0,.3); border:1px solid rgba(251,191,36,.3);
+  border-radius:9px; padding:9px 13px; color:#fff; font-size:.9rem;
+  font-family:'DM Sans',sans-serif; outline:none; transition:border-color .2s;
+}
+.name-input:focus { border-color:#fbbf24; box-shadow:0 0 0 3px rgba(251,191,36,.15); }
+.name-input::placeholder { color:rgba(255,255,255,.35); }
+.btn-save-name {
+  background:linear-gradient(135deg,#f59e0b,#d97706); border:none;
+  border-radius:9px; padding:9px 16px; color:#fff; font-weight:700;
+  font-size:.87rem; cursor:pointer; font-family:'DM Sans',sans-serif;
+  transition:all .2s; white-space:nowrap;
+}
+.btn-save-name:hover { transform:translateY(-1px); box-shadow:0 4px 14px rgba(251,191,36,.4); }
+
+/* Hall of Fame list */
+.hall-list {
+  background:rgba(0,0,0,.2); border:1px solid rgba(255,255,255,.08);
+  border-radius:12px; padding:12px 15px; margin:10px 0 14px; text-align:left;
+  animation:fadeIn .4s ease;
+}
+.hall-title {
+  font-size:.78rem; font-weight:700; text-transform:uppercase;
+  letter-spacing:.08em; color:var(--muted); margin-bottom:9px;
+  font-family:'DM Sans',sans-serif;
+}
+.hall-entry {
+  display:flex; align-items:center; gap:9px; padding:6px 0;
+  border-bottom:1px solid rgba(255,255,255,.05); font-family:'DM Sans',sans-serif;
+}
+.hall-entry:last-child { border-bottom:none; }
+.hall-rank { font-size:1rem; flex-shrink:0; width:24px; text-align:center; }
+.hall-name { flex:1; font-weight:600; color:var(--text); font-size:.9rem; }
+.hall-date { font-size:.75rem; color:var(--muted); }
+
+@keyframes fadeIn { from{opacity:0;transform:translateY(8px)} to{opacity:1;transform:translateY(0)} }
+
+/* ═══════════════════════════════════════
+   HALL DA FAMA — DADOS TAB
+═══════════════════════════════════════ */
+.hall-theme-block {
+  margin-bottom: 22px;
+}
+.hall-theme-block:last-child { margin-bottom: 0; }
+.hall-theme-header {
+  font-family: 'Playfair Display', serif;
+  font-size: .92rem;
+  font-weight: 700;
+  color: #fbbf24;
+  padding: 8px 4px;
+  border-bottom: 1px solid rgba(251,191,36,.2);
+  margin-bottom: 6px;
+  display: flex;
+  align-items: center;
+  gap: 7px;
+}
+
+/* ═══════════════════════════════════════
+   PERSIST INFO BANNER
+═══════════════════════════════════════ */
+.persist-info-banner {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  background: rgba(124,58,237,.1);
+  border: 1px solid rgba(124,58,237,.3);
+  border-radius: 14px;
+  padding: 16px 18px;
+  margin-bottom: 18px;
+  flex-wrap: wrap;
+}
+.persist-info-icon {
+  font-size: 1.6rem;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+.persist-info-text {
+  flex: 1;
+  min-width: 200px;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+.persist-info-text strong {
+  color: var(--text);
+  font-size: .88rem;
+  font-family: 'DM Sans', sans-serif;
+}
+.persist-info-text span {
+  color: var(--muted);
+  font-size: .8rem;
+  font-family: 'DM Sans', sans-serif;
+  line-height: 1.5;
+}
+.persist-info-text em {
+  color: rgba(255,255,255,.75);
+  font-style: normal;
+  font-weight: 600;
+}
+.persist-info-text code {
+  background: rgba(0,0,0,.3);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 1px 5px;
+  font-size: .78rem;
+  color: #a78bfa;
+  font-family: monospace;
+}
+.persist-export-btn {
+  align-self: center;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+

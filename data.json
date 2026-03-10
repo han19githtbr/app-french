@@ -1,0 +1,695 @@
+{
+  "themes": [
+    "Gramática",
+    "Cultura",
+    "Lugares",
+    "Esportes",
+    "Tecnologia",
+    "Relacionamentos",
+    "Diversidade",
+    "Natureza",
+    "Lazeres"
+  ],
+  "posts": [
+    {
+      "id": 1,
+      "theme": "Gramática",
+      "title": "CES vs SES",
+      "subtitle": "Démonstratif ou Possessif?",
+      "content": [
+        "CES → Démonstratif (avant un nom)",
+        "SES → Possessif (indique possession)",
+        "Ex: Ces fleurs sont belles.",
+        "Ex: Il a oublié ses clés."
+      ],
+      "gradient": "linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%)",
+      "accent": "#e94560",
+      "icon": "📚"
+    },
+    {
+      "id": 2,
+      "theme": "Gramática",
+      "title": "La Préposition « À »",
+      "subtitle": "6 usages essentiels",
+      "content": [
+        "⏰ Le temps: à 12h00, à demain",
+        "👤 L'appartenance: à moi, à toi",
+        "🗺️ La destination: à Paris, à l'école",
+        "🚗 Les transports: à vélo, à pied",
+        "📏 La distance: à côté, à gauche",
+        "🍓 La composition: à la fraise"
+      ],
+      "gradient": "linear-gradient(135deg, #0d0d0d 0%, #1a0a2e 50%, #2d1b69 100%)",
+      "accent": "#a855f7",
+      "icon": "✏️"
+    },
+    {
+      "id": 3,
+      "theme": "Gramática",
+      "title": "Verbe à l'Infinitif",
+      "subtitle": "Après de, sans, à, pour, par",
+      "content": [
+        "Elle vient DE manger une pomme",
+        "Elle reste là, SANS bouger",
+        "Il commence À chanter",
+        "Il a pris le ballon POUR s'amuser",
+        "Elle va finir PAR s'énerver"
+      ],
+      "gradient": "linear-gradient(135deg, #0a2e0a 0%, #1a3a1a 50%, #2d5a2d 100%)",
+      "accent": "#4ade80",
+      "icon": "🔤"
+    },
+    {
+      "id": 4,
+      "theme": "Gramática",
+      "title": "ÇA vs SA",
+      "subtitle": "Verbe ou Nom?",
+      "content": [
+        "ÇA → suivi d'un VERBE",
+        "SA → suivi d'un NOM",
+        "Ex: Ça suffit! (verbe)",
+        "Ex: Je connais sa mère. (nom)",
+        "💡 Truc: remplace par 'cela'"
+      ],
+      "gradient": "linear-gradient(135deg, #2e1a0a 0%, #3a2a1a 50%, #5a3d1a 100%)",
+      "accent": "#fbbf24",
+      "icon": "💡"
+    },
+    {
+      "id": 5,
+      "theme": "Gramática",
+      "title": "CES ≠ C'EST",
+      "subtitle": "Ne confondez pas!",
+      "content": [
+        "CES → avant un nom (pluriel)",
+        "C'EST → signifie 'cela est'",
+        "Ex: Ces livres sont intéressants.",
+        "Ex: C'est mon voisin.",
+        "C'est incroyable! ✨"
+      ],
+      "gradient": "linear-gradient(135deg, #1a0a2e 0%, #2e1a4a 50%, #4a2a6e 100%)",
+      "accent": "#f472b6",
+      "icon": "📖"
+    },
+    {
+      "id": 6,
+      "theme": "Gramática",
+      "title": "Moyens de Transport",
+      "subtitle": "À ou En?",
+      "content": [
+        "À → Tu veux y aller à pied ou à moto?",
+        "à pied 🚶 | à vélo 🚴 | à moto 🏍️",
+        "EN → on va voyager en bus",
+        "en voiture 🚗 | en bus 🚌 | en avion ✈️"
+      ],
+      "gradient": "linear-gradient(135deg, #0a1a2e 0%, #1a2e4a 50%, #2a4a6e 100%)",
+      "accent": "#38bdf8",
+      "icon": "🚗"
+    },
+    {
+      "id": 7,
+      "theme": "Cultura",
+      "title": "Un Peu Sur La France 🇫🇷",
+      "subtitle": "Faits incroyables",
+      "content": [
+        "🧀 La France produit environ 1600 variétés de fromages",
+        "🗣️ Le français est la langue officielle de 29 pays",
+        "🏰 Le Château de Chambord: 440 pièces et 365 cheminées",
+        "⛰️ Le Mont Blanc: 4810 mètres d'altitude"
+      ],
+      "gradient": "linear-gradient(135deg, #1e0a00 0%, #3d1f00 50%, #5a3000 100%)",
+      "accent": "#f97316",
+      "icon": "🇫🇷"
+    },
+    {
+      "id": 8,
+      "theme": "Cultura",
+      "title": "5 Expressions Françaises",
+      "subtitle": "Parlez comme un natif!",
+      "content": [
+        "☁️ Avoir le cafard → être déprimé",
+        "🌙 Être dans la lune → avoir la tête ailleurs",
+        "🎭 Faire un tabac → obtenir un grand succès",
+        "🐟 Noyer le poisson → cacher une information",
+        "🙌 Faire des pieds et des mains → faire beaucoup d'efforts"
+      ],
+      "gradient": "linear-gradient(135deg, #0a0a1e 0%, #1a1a3d 50%, #2a2a5a 100%)",
+      "accent": "#818cf8",
+      "icon": "💬"
+    },
+    {
+      "id": 9,
+      "theme": "Lugares",
+      "title": "Les Monuments de Paris",
+      "subtitle": "Découvrez la capitale!",
+      "content": [
+        "🗼 La Tour Eiffel",
+        "⛪ Le Sacré-Cœur",
+        "🏛️ L'Arc de Triomphe",
+        "⛩️ Notre-Dame de Paris",
+        "🎭 Le Moulin Rouge",
+        "🏺 La Pyramide du Louvre"
+      ],
+      "gradient": "linear-gradient(135deg, #1a0020 0%, #2d0035 50%, #440050 100%)",
+      "accent": "#c084fc",
+      "icon": "🏛️"
+    },
+    {
+      "id": 10,
+      "theme": "Lugares",
+      "title": "Sur La Route",
+      "subtitle": "Vocabulaire de circulation",
+      "content": [
+        "🔄 Un rond-point = a roundabout",
+        "🚶 Un passage piétons = pedestrian crossing",
+        "🚦 Un feu tricolore = traffic lights",
+        "🛤️ Un trottoir = a pavement",
+        "✝️ Un carrefour = a crossroad",
+        "🌉 Un pont = a bridge | Un tunnel = a tunnel"
+      ],
+      "gradient": "linear-gradient(135deg, #0a1a0a 0%, #1a2e1a 50%, #2a452a 100%)",
+      "accent": "#86efac",
+      "icon": "🛣️"
+    },
+    {
+      "id": 11,
+      "theme": "Natureza",
+      "title": "Dérivés d'un Arbre",
+      "subtitle": "Vocabulaire de la nature",
+      "content": [
+        "🌿 Écorce = bark",
+        "🪵 Souche = tree stump",
+        "🌲 Tronc = trunk",
+        "🪓 Bûche = log",
+        "🌱 Tige = stem",
+        "🌿 Branche = branch"
+      ],
+      "gradient": "linear-gradient(135deg, #0a1a0a 0%, #1a3a1a 50%, #2a5a2a 100%)",
+      "accent": "#22c55e",
+      "icon": "🌳"
+    },
+    {
+      "id": 12,
+      "theme": "Natureza",
+      "title": "Fruits Verts",
+      "subtitle": "Les fruits de la nature",
+      "content": [
+        "🍇 Le raisin | 🍈 La goyave | 🥝 Le kiwi",
+        "🥭 La mangue verte | 🍐 La poire",
+        "🥑 L'avocat | 🍋 La bergamote",
+        "🌵 Le jacque | 🌿 Le durian"
+      ],
+      "gradient": "linear-gradient(135deg, #0f2e0a 0%, #1e4a14 50%, #2d6a1e 100%)",
+      "accent": "#84cc16",
+      "icon": "🍎"
+    },
+    {
+      "id": 13,
+      "theme": "Lazeres",
+      "title": "Au Restaurant 🇫🇷",
+      "subtitle": "Vocabulaire essentiel",
+      "content": [
+        "👨‍🍳 Le serveur / La serveuse",
+        "📋 Le menu | Le plat du jour",
+        "🍽️ Une table | Une chaise",
+        "💰 Le pourboire = the tip",
+        "🥤 Des boissons = some drinks",
+        "🧾 L'addition = the bill"
+      ],
+      "gradient": "linear-gradient(135deg, #1e0a0a 0%, #3a1414 50%, #5a1e1e 100%)",
+      "accent": "#ef4444",
+      "icon": "🍽️"
+    },
+    {
+      "id": 14,
+      "theme": "Lazeres",
+      "title": "Les Instruments de Musique",
+      "subtitle": "La musique en français",
+      "content": [
+        "🎵 La harpe | Le luth | La guitare",
+        "🎻 Le violon | Le piano | Le banjo",
+        "🥁 Le tambour | L'accordéon",
+        "🎷 Le saxophone",
+        "💡 On dit: Je joue DU piano / DE LA guitare"
+      ],
+      "gradient": "linear-gradient(135deg, #1a0a2e 0%, #2e1a4a 50%, #4a2e6e 100%)",
+      "accent": "#a78bfa",
+      "icon": "🎵"
+    },
+    {
+      "id": 15,
+      "theme": "Diversidade",
+      "title": "Les Animaux",
+      "subtitle": "Mâle, Femelle et Petit",
+      "content": [
+        "🐕 Le chien → la chienne → le chiot",
+        "🐱 Le chat → la chatte → le chaton",
+        "🐴 Le cheval → la jument → le poulain",
+        "🐄 Le taureau → la vache → le veau",
+        "🐺 Le loup → la louve → le louveteau"
+      ],
+      "gradient": "linear-gradient(135deg, #0a1e1a 0%, #1a3a30 50%, #2a5a48 100%)",
+      "accent": "#2dd4bf",
+      "icon": "🐾"
+    },
+    {
+      "id": 16,
+      "theme": "Tecnologia",
+      "title": "La Voiture en Français",
+      "subtitle": "Pièces et vocabulaire",
+      "content": [
+        "🎛️ Levier de vitesse | Le volant | Le siège",
+        "🪞 Le rétroviseur | Le compteur",
+        "🛞 La roue | Les phares | La clé",
+        "⚙️ Le moteur",
+        "🔒 La ceinture de sécurité",
+        "🔖 La plaque d'immatriculation"
+      ],
+      "gradient": "linear-gradient(135deg, #0a0a1a 0%, #1a1a2e 50%, #2a2a45 100%)",
+      "accent": "#60a5fa",
+      "icon": "🚘"
+    },
+    {
+      "id": 17,
+      "theme": "Tecnologia",
+      "title": "Les Outils",
+      "subtitle": "Vocabulaire du bricolage",
+      "content": [
+        "🔨 Maillet | Marteau | Clé de serrage",
+        "🪚 Scie à main | Scie à métaux | Scie électrique",
+        "📦 Caisse à outils | Équerre droite",
+        "🔩 Vis | Écrou | Boulon | Clou",
+        "🔌 Perceuse électrique | Étau"
+      ],
+      "gradient": "linear-gradient(135deg, #1a1000 0%, #2e2000 50%, #453000 100%)",
+      "accent": "#fbbf24",
+      "icon": "🔧"
+    },
+    {
+      "id": 18,
+      "theme": "Lazeres",
+      "title": "Verbes de Cuisine",
+      "subtitle": "En cuisine avec style!",
+      "content": [
+        "🔪 Couper = to cut",
+        "🍳 Frire = to fry",
+        "🔥 Griller = to grill",
+        "🥚 Battre = to beat",
+        "🍊 Éplucher = to peel",
+        "🍋 Presser = to squeeze"
+      ],
+      "gradient": "linear-gradient(135deg, #1e0800 0%, #3a1400 50%, #5a2000 100%)",
+      "accent": "#fb923c",
+      "icon": "👨‍🍳"
+    },
+    {
+      "id": 19,
+      "theme": "Lazeres",
+      "title": "Ustensiles de Cuisine",
+      "subtitle": "Dans la cuisine française",
+      "content": [
+        "🪵 Planche à découper = cutting board",
+        "🥄 Louche = ladle",
+        "🍳 Spatule | Poêle | Marmite",
+        "🔪 Couteau = knife",
+        "🌀 Fouet = whisk",
+        "☕ Bouilloire = kettle"
+      ],
+      "gradient": "linear-gradient(135deg, #1a0a0a 0%, #2e1a1a 50%, #452a2a 100%)",
+      "accent": "#f87171",
+      "icon": "🍲"
+    },
+    {
+      "id": 20,
+      "theme": "Relacionamentos",
+      "title": "Exprimer Ses Sentiments",
+      "subtitle": "Dire ce qu'on ressent",
+      "content": [
+        "❤️ Je t'aime = I love you",
+        "😊 Je t'apprécie beaucoup = I appreciate you",
+        "🤝 Tu me manques = I miss you",
+        "😤 Je suis en colère = I am angry",
+        "😢 Je suis triste = I am sad",
+        "🥰 Tu es formidable = You are wonderful"
+      ],
+      "gradient": "linear-gradient(135deg, #1e0010 0%, #3a001e 50%, #5a002e 100%)",
+      "accent": "#fb7185",
+      "icon": "❤️"
+    },
+    {
+      "id": 21,
+      "theme": "Relacionamentos",
+      "title": "La Famille",
+      "subtitle": "Membres de la famille",
+      "content": [
+        "👨‍👩‍👧‍👦 Les parents = parents",
+        "👴 Le grand-père | 👵 La grand-mère",
+        "👫 Le mari / La femme = husband / wife",
+        "👦 Le fils / 👧 La fille = son / daughter",
+        "👨‍👧 L'oncle / La tante = uncle / aunt",
+        "🧒 Le cousin / La cousine = cousin"
+      ],
+      "gradient": "linear-gradient(135deg, #0a001e 0%, #1a0035 50%, #2a004f 100%)",
+      "accent": "#c084fc",
+      "icon": "👨‍👩‍👧‍👦"
+    },
+    {
+      "id": 22,
+      "theme": "Esportes",
+      "title": "Les Sports en Français",
+      "subtitle": "Jouer ou Faire?",
+      "content": [
+        "⚽ Jouer au football",
+        "🎾 Jouer au tennis",
+        "🏊 Faire de la natation",
+        "🚴 Faire du vélo",
+        "🧘 Faire du yoga",
+        "💡 JOUER AU + sport d'équipe / FAIRE DU + sport individuel"
+      ],
+      "gradient": "linear-gradient(135deg, #001a1a 0%, #003a3a 50%, #005a5a 100%)",
+      "accent": "#22d3ee",
+      "icon": "⚽"
+    },
+    {
+      "id": 23,
+      "theme": "Esportes",
+      "title": "Les Jeux Olympiques",
+      "subtitle": "La France et le sport",
+      "content": [
+        "🏅 Paris a accueilli les JO en 2024",
+        "🥇 La France est riche en champions",
+        "🤸 Athlétisme, natation, escrime...",
+        "🏋️ La France excelle en judo",
+        "⚽ Les Bleus sont champions du monde 1998 et 2018",
+        "🎽 Le sport est une passion nationale"
+      ],
+      "gradient": "linear-gradient(135deg, #0a0a00 0%, #1e1e00 50%, #2e2e10 100%)",
+      "accent": "#eab308",
+      "icon": "🏅"
+    }
+  ],
+  "quiz": [
+    {
+      "id": 1,
+      "theme": "Gramática",
+      "question": "Quelle est la bonne réponse? 'Il habite chez ___ parents.'",
+      "options": [
+        "ces",
+        "ses",
+        "les",
+        "des"
+      ],
+      "correct": 1,
+      "explanation": "SES est possessif - il indique que les parents appartiennent à quelqu'un (ses parents = his/her parents)."
+    },
+    {
+      "id": 2,
+      "theme": "Gramática",
+      "question": "Choisissez la bonne préposition: 'Je vais ___ école.'",
+      "options": [
+        "en",
+        "au",
+        "à l'",
+        "de"
+      ],
+      "correct": 2,
+      "explanation": "Devant un nom féminin commençant par une voyelle, on utilise 'à l'' (à + le/la + voyelle = à l')."
+    },
+    {
+      "id": 3,
+      "theme": "Gramática",
+      "question": "Après 'sans', le verbe se met toujours...",
+      "options": [
+        "au présent",
+        "au passé composé",
+        "à l'infinitif",
+        "au subjonctif"
+      ],
+      "correct": 2,
+      "explanation": "Après de, sans, à, pour, par → le verbe se met TOUJOURS à l'infinitif. Ex: sans bouger."
+    },
+    {
+      "id": 4,
+      "theme": "Gramática",
+      "question": "Complétez: '___ suffit!' (ça ou sa?)",
+      "options": [
+        "Sa",
+        "Ça",
+        "Ces",
+        "C'est"
+      ],
+      "correct": 1,
+      "explanation": "ÇA précède un verbe. SA précède un nom. 'Suffit' est un verbe, donc on utilise ÇA."
+    },
+    {
+      "id": 5,
+      "theme": "Gramática",
+      "question": "Comment voyager à l'intérieur du véhicule?",
+      "options": [
+        "à voiture",
+        "en voiture",
+        "par voiture",
+        "de voiture"
+      ],
+      "correct": 1,
+      "explanation": "EN + moyens de transport où on s'installe à l'intérieur: en voiture, en bus, en avion..."
+    },
+    {
+      "id": 6,
+      "theme": "Cultura",
+      "question": "Combien de variétés de fromages la France produit-elle?",
+      "options": [
+        "Environ 100",
+        "Environ 500",
+        "Environ 1600",
+        "Environ 3000"
+      ],
+      "correct": 2,
+      "explanation": "La France est célèbre pour produire environ 1600 variétés de fromages différents!"
+    },
+    {
+      "id": 7,
+      "theme": "Cultura",
+      "question": "Que signifie l'expression 'avoir le cafard'?",
+      "options": [
+        "Avoir un insecte chez soi",
+        "Être déprimé",
+        "Avoir peur",
+        "Être content"
+      ],
+      "correct": 1,
+      "explanation": "'Avoir le cafard' signifie être déprimé, triste ou avoir de mauvaises pensées."
+    },
+    {
+      "id": 8,
+      "theme": "Cultura",
+      "question": "Le français est langue officielle dans combien de pays?",
+      "options": [
+        "12 pays",
+        "19 pays",
+        "29 pays",
+        "45 pays"
+      ],
+      "correct": 2,
+      "explanation": "Le français est la langue officielle de 29 pays dans le monde, dont la France, la Belgique, la Suisse, le Canada..."
+    },
+    {
+      "id": 9,
+      "theme": "Cultura",
+      "question": "Que signifie 'Faire un tabac'?",
+      "options": [
+        "Fumer une cigarette",
+        "Obtenir un grand succès",
+        "Faire une erreur",
+        "Se battre"
+      ],
+      "correct": 1,
+      "explanation": "'Faire un tabac' est une expression idiomatique qui signifie obtenir un grand succès."
+    },
+    {
+      "id": 10,
+      "theme": "Lugares",
+      "title": "Les Monuments de Paris",
+      "question": "Lequel de ces monuments se trouve à Paris?",
+      "options": [
+        "Le Colisée",
+        "La Sagrada Família",
+        "Le Sacré-Cœur",
+        "La Tour de Pise"
+      ],
+      "correct": 2,
+      "explanation": "Le Sacré-Cœur est une basilique située à Montmartre, Paris. Les autres sont à Rome, Barcelone et Pise."
+    },
+    {
+      "id": 11,
+      "theme": "Lugares",
+      "question": "Un 'rond-point' en anglais c'est...",
+      "options": [
+        "a traffic light",
+        "a roundabout",
+        "a crossroad",
+        "a bridge"
+      ],
+      "correct": 1,
+      "explanation": "Un rond-point = a roundabout en anglais. C'est une intersection circulaire où la priorité est à gauche."
+    },
+    {
+      "id": 12,
+      "theme": "Esportes",
+      "question": "Comment dit-on 'Jouer au tennis' correctement?",
+      "options": [
+        "Faire du tennis",
+        "Jouer le tennis",
+        "Jouer au tennis",
+        "Pratiquer au tennis"
+      ],
+      "correct": 2,
+      "explanation": "Pour les sports d'équipe et jeux, on utilise JOUER AU + sport. Ex: jouer au football, jouer au tennis."
+    },
+    {
+      "id": 13,
+      "theme": "Esportes",
+      "question": "En quelle année la France a-t-elle accueilli les Jeux Olympiques?",
+      "options": [
+        "2020",
+        "2022",
+        "2024",
+        "2026"
+      ],
+      "correct": 2,
+      "explanation": "Paris a accueilli les Jeux Olympiques d'été en 2024, une célébration exceptionnelle pour la France!"
+    },
+    {
+      "id": 14,
+      "theme": "Tecnologia",
+      "question": "'Le volant' dans une voiture, c'est quoi?",
+      "options": [
+        "Le siège",
+        "Le moteur",
+        "Le volant de direction",
+        "Les phares"
+      ],
+      "correct": 2,
+      "explanation": "Le volant est la roue que le conducteur tient pour diriger la voiture = the steering wheel."
+    },
+    {
+      "id": 15,
+      "theme": "Natureza",
+      "question": "Comment s'appelle la couche extérieure d'un arbre?",
+      "options": [
+        "La branche",
+        "La souche",
+        "L'écorce",
+        "Le tronc"
+      ],
+      "correct": 2,
+      "explanation": "L'écorce est la couverture extérieure protectrice de l'arbre = the bark in English."
+    },
+    {
+      "id": 16,
+      "theme": "Natureza",
+      "question": "Qu'est-ce qu'une 'goyave' en français?",
+      "options": [
+        "Une mangue",
+        "Une goyave (guava)",
+        "Un kiwi",
+        "Une poire"
+      ],
+      "correct": 1,
+      "explanation": "La goyave est un fruit tropical vert = guava en anglais. Elle est riche en vitamine C!"
+    },
+    {
+      "id": 17,
+      "theme": "Lazeres",
+      "question": "Que signifie 'l'addition' au restaurant?",
+      "options": [
+        "The menu",
+        "The dish of the day",
+        "The tip",
+        "The bill"
+      ],
+      "correct": 3,
+      "explanation": "L'addition = the bill. C'est ce que vous demandez au serveur à la fin du repas: 'L'addition, s'il vous plaît!'"
+    },
+    {
+      "id": 18,
+      "theme": "Lazeres",
+      "question": "Le verbe 'éplucher' signifie...",
+      "options": [
+        "to cook",
+        "to fry",
+        "to peel",
+        "to cut"
+      ],
+      "correct": 2,
+      "explanation": "Éplucher = to peel. On épluche les légumes et les fruits pour enlever la peau. Ex: éplucher une orange."
+    },
+    {
+      "id": 19,
+      "theme": "Relacionamentos",
+      "question": "Comment dit-on 'I miss you' en français?",
+      "options": [
+        "Je t'aime",
+        "Tu me manques",
+        "Je suis triste",
+        "Tu es absent"
+      ],
+      "correct": 1,
+      "explanation": "'Tu me manques' = I miss you. Attention: en français, c'est littéralement 'you are missing to me'!"
+    },
+    {
+      "id": 20,
+      "theme": "Diversidade",
+      "question": "Comment s'appelle le petit du chat?",
+      "options": [
+        "Le chiot",
+        "Le chaton",
+        "Le canardeau",
+        "L'agneau"
+      ],
+      "correct": 1,
+      "explanation": "Le chat → la chatte → le chaton. Le chiot est le petit du chien, pas du chat!"
+    },
+    {
+      "id": 21,
+      "theme": "Diversidade",
+      "question": "La femelle du cheval s'appelle...",
+      "options": [
+        "La cavale",
+        "La pouliche",
+        "La jument",
+        "La louve"
+      ],
+      "correct": 2,
+      "explanation": "Le cheval → la jument → le poulain. La jument est la femelle adulte du cheval."
+    },
+    {
+      "id": 22,
+      "theme": "Gramática",
+      "question": "Quel instrument utilise-t-on avec 'jouer de'?",
+      "options": [
+        "Je joue au piano",
+        "Je joue du piano",
+        "Je fais le piano",
+        "Je pratique piano"
+      ],
+      "correct": 1,
+      "explanation": "Pour les instruments de musique: JOUER DE + instrument. Ex: jouer du piano, jouer de la guitare."
+    },
+    {
+      "id": 23,
+      "theme": "Cultura",
+      "question": "Combien de pièces a le Château de Chambord?",
+      "options": [
+        "100 pièces",
+        "220 pièces",
+        "440 pièces",
+        "600 pièces"
+      ],
+      "correct": 2,
+      "explanation": "Le Château de Chambord est le plus grand château de France avec 440 pièces et 365 cheminées!"
+    }
+  ],
+  "savedPosts": [],
+  "exportedAt": "2026-03-10T17:28:26.695Z"
+}

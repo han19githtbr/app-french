@@ -233,9 +233,26 @@
       <label class="btn-sm btn-purple" style="cursor:pointer">📂 Importar data.json<input type="file" accept=".json" onchange="importData(this)" style="display:none"></label>
       <button class="btn-sm btn-red" onclick="clearSaved()">🗑️ Limpar salvas</button>
     </div>
+
+    <div class="persist-info-banner">
+      <div class="persist-info-icon">💾</div>
+      <div class="persist-info-text">
+        <strong>Como guardar publicações e Hall da Fama no servidor</strong>
+        <span>Publicações criadas e campeões do Quiz ficam salvos em memória durante a sessão. Para persistir permanentemente: clique em <em>Exportar data.json</em> e substitua o ficheiro <code>database/data.json</code> no servidor pelo exportado. Na próxima vez que o app carregar, todos os dados estarão disponíveis.</span>
+      </div>
+      <button class="btn-sm btn-green persist-export-btn" onclick="exportData()">⬇️ Exportar agora</button>
+    </div>
     <div class="panel-card">
       <h3 style="font-family:'Playfair Display',serif;font-size:1rem;margin-bottom:14px">📋 Publicações no Banco de Dados</h3>
       <div id="dbTable" style="overflow-x:auto;max-height:420px;overflow-y:auto;"></div>
+    </div>
+
+    <div class="panel-card" id="hallCard">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;flex-wrap:wrap;gap:10px;">
+        <h3 style="font-family:'Playfair Display',serif;font-size:1rem;margin:0">🏅 Hall da Fama — Pontuações Perfeitas</h3>
+        <button class="btn-sm btn-red" onclick="clearHallOfFame()">🗑️ Limpar Hall</button>
+      </div>
+      <div id="hallTable"></div>
     </div>
   </div>
 </section>

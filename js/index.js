@@ -39,7 +39,17 @@ const store = (() => {
 
 function saveSaved(arr) { try{localStorage.setItem('fn3_saved',JSON.stringify(arr));}catch{} }
 function loadCustom() { try{return JSON.parse(localStorage.getItem('fn3_custom')||'[]');}catch{return[];} }
-function saveCustom(p) { const a=loadCustom(); a.push(p); localStorage.setItem('fn3_custom',JSON.stringify(a)); }
+function saveCustom(p) {
+  // localStorage fallback
+  const a = loadCustom(); a.push(p); localStorage.setItem('fn3_custom', JSON.stringify(a));
+  // Also persist into in-memory db.customPosts (exported with data.json)
+  const d = db();
+  if (d) {
+    if (!Array.isArray(d.customPosts)) d.customPosts = [];
+    if (!d.customPosts.find(x=>x.id===p.id)) d.customPosts.push(p);
+    store.set({ db: d });
+  }
+}
 
 // ══════════════════════════════
 //  INIT
@@ -65,13 +75,31 @@ async function loadDB() {
   try {
     const r = await fetch('database/data.json?v='+Date.now());
     const data = await r.json();
-    const custom = loadCustom();
+
+    // Merge customPosts from data.json (persistent) + localStorage (fallback)
+    const fromFile = Array.isArray(data.customPosts) ? data.customPosts : [];
+    const fromLS   = loadCustom();
     const ids = new Set(data.posts.map(p=>p.id));
-    custom.forEach(p => { if(!ids.has(p.id)) data.posts.push(p); });
+    // Add file-persisted customs first
+    fromFile.forEach(p => { if(!ids.has(p.id)){ data.posts.push(p); ids.add(p.id); } });
+    // Then localStorage customs (older fallback)
+    fromLS.forEach(p => { if(!ids.has(p.id)){ data.posts.push(p); ids.add(p.id); } });
+
+    // Merge hallOfFame from data.json + localStorage
+    const hallFromFile = Array.isArray(data.hallOfFame) ? data.hallOfFame : [];
+    const hallFromLS   = loadHallOfFame_LS();
+    // Merge by dedup (name+theme+date)
+    const seen = new Set(hallFromFile.map(e=>e.name+'|'+e.theme+'|'+e.date));
+    hallFromLS.forEach(e => { if(!seen.has(e.name+'|'+e.theme+'|'+e.date)) hallFromFile.push(e); });
+    data.hallOfFame = hallFromFile;
+
+    // Sync merged hall back to localStorage
+    saveHallOfFame_LS(data.hallOfFame);
+
     store.set({ db: data });
   } catch(e) {
     console.error('DB load error',e);
-    store.set({ db: { themes:['Gramática','Cultura','Lugares','Esportes','Tecnologia','Relacionamentos','Diversidade','Natureza','Lazeres'], posts:[], quiz:[] } });
+    store.set({ db: { themes:['Gramática','Cultura','Lugares','Esportes','Tecnologia','Relacionamentos','Diversidade','Natureza','Lazeres'], posts:[], quiz:[], customPosts:[], hallOfFame:[] } });
   }
 }
 
@@ -102,7 +130,7 @@ function showSection(id, btn) {
   document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));
   document.getElementById('section-'+id).classList.add('active');
   if (btn) btn.classList.add('active');
-  if (id==='data') { refreshStats(); renderDBTable(); }
+  if (id==='data') { refreshStats(); renderDBTable(); renderHallTable(); }
 }
 
 // ══════════════════════════════
@@ -320,11 +348,101 @@ function initItemsBuilder() {
   ['⚽ Jouer au football','🎾 Jouer au tennis','🏊 Faire de la natation'].forEach(v=>addItem(v));
 }
 
+// ══════════════════════════════
+//  EMOJI PICKER
+// ══════════════════════════════
+const EMOJI_CATEGORIES = {
+  '🌟 Geral':     ['⭐','🌟','✨','💡','🔑','📌','✅','❌','⚠️','💬','🔥','💎','🎯','🏆','🎉','📝','💪','👍','❤️','🌈'],
+  '📚 Educação':  ['📚','📖','✏️','📝','🖊️','📐','📏','🔬','🔭','💻','🖥️','📊','📈','🎓','🏫','📋','🗒️','📄','🖋️','📓'],
+  '🇫🇷 Françês':  ['🇫🇷','🗼','🥐','🍷','🧀','🎭','🎨','🏰','⚜️','🌹','🎶','💃','🍾','🥖','🏛️','🎠','🌺','🛍️','🎪','🌊'],
+  '⚽ Esportes':  ['⚽','🎾','🏊','🏋️','🚴','🏃','🎿','⛷️','🏄','🎯','🏹','🥊','🏈','⚾','🎱','🏓','🏸','🥋','🏇','🤸'],
+  '🌿 Natureza':  ['🌿','🌱','🌳','🍀','🌸','🌺','🌻','🍁','🌾','🌊','🌙','☀️','⭐','🌈','❄️','⛄','🌍','🌊','🦋','🐝'],
+  '🍕 Comida':    ['🍕','🍔','🥗','🍣','🍜','🥘','🍱','🥐','🍷','☕','🧃','🎂','🍰','🍦','🍫','🍎','🥑','🍇','🍓','🥦'],
+  '😊 Emoções':   ['😊','😍','🤔','😂','😮','😢','😎','🥳','😴','🤩','💖','💫','🙌','👏','🤝','🙏','💪','🫶','🤗','😃'],
+  '🏠 Lugares':   ['🏠','🏢','🏰','🗼','🌉','🚉','✈️','🚢','🏖️','🏝️','🗺️','🧭','📍','🌃','🏙️','🌄','🏕️','🗽','🏯','⛩️'],
+};
+
+let _activeEmojiRow = null;
+
+function openEmojiPicker(btn) {
+  // Close if already open for this button
+  const existing = document.getElementById('emoji-picker-popup');
+  if (existing) {
+    const wasForThis = _activeEmojiRow === btn.closest('.item-row');
+    existing.remove();
+    _activeEmojiRow = null;
+    if (wasForThis) return;
+  }
+
+  _activeEmojiRow = btn.closest('.item-row');
+  const input = _activeEmojiRow.querySelector('.form-input');
+
+  const popup = document.createElement('div');
+  popup.id = 'emoji-picker-popup';
+  popup.className = 'emoji-picker-popup';
+
+  let html = '<div class="emoji-picker-tabs">';
+  const cats = Object.keys(EMOJI_CATEGORIES);
+  cats.forEach((cat, i) => {
+    const icon = cat.split(' ')[0];
+    html += `<button class="emoji-tab ${i===0?'active':''}" onclick="switchEmojiTab(this,'${cat}')" title="${cat}">${icon}</button>`;
+  });
+  html += '</div>';
+
+  cats.forEach((cat, i) => {
+    html += `<div class="emoji-grid ${i===0?'active':''}" data-cat="${cat}">`;
+    EMOJI_CATEGORIES[cat].forEach(em => {
+      html += `<button class="emoji-btn" onclick="insertEmoji('${em}')">${em}</button>`;
+    });
+    html += '</div>';
+  });
+
+  popup.innerHTML = html;
+  _activeEmojiRow.appendChild(popup);
+
+  // Close on outside click
+  setTimeout(() => {
+    document.addEventListener('click', _closeEmojiOnOutside, { once: false });
+  }, 10);
+}
+
+function _closeEmojiOnOutside(e) {
+  const popup = document.getElementById('emoji-picker-popup');
+  if (!popup) { document.removeEventListener('click', _closeEmojiOnOutside); return; }
+  if (!popup.contains(e.target) && !e.target.classList.contains('emoji-trigger')) {
+    popup.remove();
+    _activeEmojiRow = null;
+    document.removeEventListener('click', _closeEmojiOnOutside);
+  }
+}
+
+function switchEmojiTab(btn, cat) {
+  const popup = document.getElementById('emoji-picker-popup');
+  popup.querySelectorAll('.emoji-tab').forEach(t => t.classList.remove('active'));
+  popup.querySelectorAll('.emoji-grid').forEach(g => g.classList.remove('active'));
+  btn.classList.add('active');
+  popup.querySelector(`.emoji-grid[data-cat="${cat}"]`).classList.add('active');
+}
+
+function insertEmoji(em) {
+  if (!_activeEmojiRow) return;
+  const input = _activeEmojiRow.querySelector('.form-input');
+  const pos = input.selectionStart ?? input.value.length;
+  input.value = input.value.slice(0, pos) + em + input.value.slice(pos);
+  input.focus();
+  input.selectionStart = input.selectionEnd = pos + em.length;
+  livePreview();
+  document.getElementById('emoji-picker-popup')?.remove();
+  _activeEmojiRow = null;
+  document.removeEventListener('click', _closeEmojiOnOutside);
+}
+
 function addItem(val='') {
   const b = document.getElementById('itemsBuilder');
   const r = document.createElement('div');
   r.className = 'item-row';
   r.innerHTML = `
+    <button class="emoji-trigger" onclick="event.stopPropagation();openEmojiPicker(this)" title="Escolher emoji">😊</button>
     <input class="form-input" type="text" value="${val}" placeholder="Ex: 🔪 Couper = to cut" oninput="livePreview()">
     <button class="btn-icon" onclick="this.parentElement.remove();livePreview()">✕</button>`;
   b.appendChild(r);
@@ -392,6 +510,50 @@ function refreshStats() {
   document.getElementById('stQuiz').textContent = d.quiz?.length ?? 0;
 }
 
+function renderHallTable() {
+  const hall = loadHallOfFame();
+  const el = document.getElementById('hallTable');
+  if (!el) return;
+  if (!hall.length) {
+    el.innerHTML = `<div style="text-align:center;padding:28px 0;color:var(--muted);font-size:.87rem"><div style="font-size:2rem;margin-bottom:8px">🏅</div>Nenhum campeão ainda. Acerte todas as perguntas de um módulo para entrar aqui!</div>`;
+    return;
+  }
+  const byTheme = {};
+  hall.forEach(e => { if (!byTheme[e.theme]) byTheme[e.theme]=[]; byTheme[e.theme].push(e); });
+  const medals = ['🥇','🥈','🥉'];
+  let html = '';
+  Object.entries(byTheme).forEach(([theme, entries]) => {
+    html += `<div class="hall-theme-block">
+      <div class="hall-theme-header">${ICONS[theme]||'🏅'} ${theme}</div>
+      <table style="width:100%;border-collapse:collapse;font-size:.82rem;">
+        <thead><tr style="border-bottom:1px solid var(--border)">
+          <th style="text-align:left;padding:6px 8px;color:var(--muted);font-size:.68rem;text-transform:uppercase;letter-spacing:.05em">#</th>
+          <th style="text-align:left;padding:6px 8px;color:var(--muted);font-size:.68rem;text-transform:uppercase;letter-spacing:.05em">Nome</th>
+          <th style="text-align:left;padding:6px 8px;color:var(--muted);font-size:.68rem;text-transform:uppercase;letter-spacing:.05em">Pontuação</th>
+          <th style="text-align:left;padding:6px 8px;color:var(--muted);font-size:.68rem;text-transform:uppercase;letter-spacing:.05em">Data</th>
+        </tr></thead>
+        <tbody>${entries.slice(0,10).map((e,i)=>`
+          <tr style="border-bottom:1px solid var(--border)" onmouseenter="this.style.background='rgba(255,255,255,.03)'" onmouseleave="this.style.background=''">
+            <td style="padding:8px">${medals[i]||(i+1)+'º'}</td>
+            <td style="padding:8px;font-weight:600;color:${i===0?'#fbbf24':'var(--text)'}">${e.name}</td>
+            <td style="padding:8px"><span style="background:rgba(34,197,94,.15);color:#22c55e;border-radius:6px;padding:2px 9px;font-weight:700">${e.score}/${e.total} ✓</span></td>
+            <td style="padding:8px;color:var(--muted)">${e.date}</td>
+          </tr>`).join('')}
+        </tbody>
+      </table>
+    </div>`;
+  });
+  el.innerHTML = html;
+}
+
+function clearHallOfFame() {
+  if (!confirm('Limpar todo o Hall da Fama?')) return;
+  saveHallOfFame([]);
+  saveHallOfFame_LS([]);
+  renderHallTable();
+  toast('🗑️ Hall da Fama limpo','');
+}
+
 function renderDBTable() {
   const d = db(); if(!d) return;
   const c = document.getElementById('dbTable');
@@ -445,13 +607,19 @@ function saveSingle(idx) {
 function exportData() {
   const d = db();
   const { saved } = store.get();
-  const exp = { ...d, savedPosts: saved, exportedAt: new Date().toISOString() };
+  const exp = {
+    ...d,
+    customPosts:  Array.isArray(d.customPosts)  ? d.customPosts  : [],
+    hallOfFame:   Array.isArray(d.hallOfFame)    ? d.hallOfFame   : [],
+    savedPosts:   saved,
+    exportedAt:   new Date().toISOString()
+  };
   const blob = new Blob([JSON.stringify(exp,null,2)], { type:'application/json' });
   const a = document.createElement('a');
   a.href = URL.createObjectURL(blob);
   a.download = 'data.json';
   a.click();
-  toast('✅ data.json exportado!','success');
+  toast('✅ data.json exportado! Substitua o ficheiro no servidor para persistir.','success');
 }
 
 function importData(input) {
@@ -526,13 +694,84 @@ function renderQ() {
     </div>`;
 }
 
+// ══════════════════════════════
+//  SOUND ENGINE
+// ══════════════════════════════
+const SFX = (() => {
+  let ctx = null;
+  function getCtx() {
+    if (!ctx) ctx = new (window.AudioContext || window.webkitAudioContext)();
+    return ctx;
+  }
+  function play(type) {
+    try {
+      const c = getCtx();
+      const now = c.currentTime;
+      if (type === 'correct') {
+        [[523.25,0,.12],[659.25,.1,.12],[783.99,.2,.18],[1046.5,.32,.22]].forEach(([freq,delay,dur]) => {
+          const o = c.createOscillator(), g = c.createGain();
+          o.connect(g); g.connect(c.destination);
+          o.type = 'sine'; o.frequency.value = freq;
+          g.gain.setValueAtTime(0, now+delay);
+          g.gain.linearRampToValueAtTime(0.18, now+delay+0.02);
+          g.gain.exponentialRampToValueAtTime(0.001, now+delay+dur);
+          o.start(now+delay); o.stop(now+delay+dur+0.05);
+        });
+      } else if (type === 'wrong') {
+        [[220,0,.15],[196,.14,.15],[174.6,.27,.22]].forEach(([freq,delay,dur]) => {
+          const o = c.createOscillator(), g = c.createGain();
+          o.connect(g); g.connect(c.destination);
+          o.type = 'sawtooth'; o.frequency.value = freq;
+          g.gain.setValueAtTime(0, now+delay);
+          g.gain.linearRampToValueAtTime(0.12, now+delay+0.02);
+          g.gain.exponentialRampToValueAtTime(0.001, now+delay+dur);
+          o.start(now+delay); o.stop(now+delay+dur+0.05);
+        });
+      } else if (type === 'perfect') {
+        [[523.25,0,.15],[659.25,.1,.15],[783.99,.2,.15],[1046.5,.32,.28],[783.99,.52,.12],[1046.5,.6,.35]].forEach(([freq,delay,dur]) => {
+          const o = c.createOscillator(), g = c.createGain();
+          o.connect(g); g.connect(c.destination);
+          o.type = 'sine'; o.frequency.value = freq;
+          g.gain.setValueAtTime(0, now+delay);
+          g.gain.linearRampToValueAtTime(0.22, now+delay+0.02);
+          g.gain.exponentialRampToValueAtTime(0.001, now+delay+dur);
+          o.start(now+delay); o.stop(now+delay+dur+0.05);
+        });
+      }
+    } catch(e) {}
+  }
+  return { play };
+})();
+
+function spawnParticles(el, type) {
+  const colors = type === 'correct'
+    ? ['#22c55e','#86efac','#fbbf24','#fff','#a78bfa']
+    : ['#ef4444','#fca5a5','#ff6b6b','#fcd34d'];
+  const rect = el.getBoundingClientRect();
+  for (let i = 0; i < 16; i++) {
+    const p = document.createElement('div');
+    p.className = 'quiz-particle';
+    p.style.cssText = `position:fixed;pointer-events:none;z-index:9999;`
+      +`left:${rect.left+rect.width/2+(Math.random()-.5)*80}px;`
+      +`top:${rect.top+rect.height/2}px;`
+      +`background:${colors[Math.floor(Math.random()*colors.length)]};`
+      +`--tx:${(Math.random()-.5)*130}px;`
+      +`--ty:${-(Math.random()*110+50)}px;`
+      +`width:${6+Math.random()*7}px;height:${6+Math.random()*7}px;`
+      +`border-radius:${Math.random()>.5?'50%':'3px'};`;
+    document.body.appendChild(p);
+    p.addEventListener('animationend', ()=>p.remove());
+  }
+}
+
 function answerQ(sel) {
   const { quiz } = store.get();
   if (quiz.answered) return;
   const q = quiz.qs[quiz.idx];
   const ok = sel===q.correct;
   document.querySelectorAll('.quiz-option').forEach(b=>b.disabled=true);
-  document.getElementById('qo'+q.correct).classList.add('correct');
+  const correctBtn = document.getElementById('qo'+q.correct);
+  correctBtn.classList.add('correct');
   if(!ok) document.getElementById('qo'+sel).classList.add('wrong');
   document.getElementById('qExpl').classList.add('visible');
   document.getElementById('btnNext').classList.add('visible');
@@ -541,6 +780,19 @@ function answerQ(sel) {
   const dots = document.querySelector('.score-dots');
   if(dots) dots.innerHTML = na.map(a=>`<div class="score-dot ${a?'correct':'wrong'}"></div>`).join('')+
     Array(quiz.qs.length-na.length).fill('<div class="score-dot"></div>').join('');
+
+  // Sound & particles
+  SFX.play(ok ? 'correct' : 'wrong');
+  const targetBtn = document.getElementById(ok ? 'qo'+q.correct : 'qo'+sel);
+  if (targetBtn) spawnParticles(targetBtn, ok ? 'correct' : 'wrong');
+  if (!ok) {
+    const wrongBtn = document.getElementById('qo'+sel);
+    wrongBtn?.classList.add('shake');
+    setTimeout(()=>wrongBtn?.classList.remove('shake'), 600);
+  } else {
+    correctBtn?.classList.add('bounce-pop');
+    setTimeout(()=>correctBtn?.classList.remove('bounce-pop'), 600);
+  }
 }
 
 function nextQ() {
@@ -550,10 +802,82 @@ function nextQ() {
   else { store.set(s=>({...s,quiz:{...s.quiz,idx:next,answered:false}})); renderQ(); }
 }
 
+// ── Hall of Fame helpers ──────────────────────────────────────────────────────
+// localStorage layer (cache/fallback)
+function loadHallOfFame_LS() {
+  try { return JSON.parse(localStorage.getItem('fn3_hall')||'[]'); } catch { return []; }
+}
+function saveHallOfFame_LS(arr) {
+  try { localStorage.setItem('fn3_hall', JSON.stringify(arr)); } catch {}
+}
+
+// Primary source: in-memory db (loaded from data.json, updated on save)
+function loadHallOfFame() {
+  const d = db();
+  return (d && Array.isArray(d.hallOfFame)) ? d.hallOfFame : loadHallOfFame_LS();
+}
+function saveHallOfFame(arr) {
+  // Update in-memory db
+  const d = db();
+  if (d) { d.hallOfFame = arr; store.set({ db: d }); }
+  // Keep localStorage in sync as fallback
+  saveHallOfFame_LS(arr);
+}
+function addToHallOfFame(name, theme, score, total) {
+  const hall = loadHallOfFame();
+  hall.unshift({ name, theme, score, total, date: new Date().toLocaleDateString('pt-BR') });
+  saveHallOfFame(hall.slice(0,50));
+}
+function getHallByTheme(theme) {
+  return loadHallOfFame().filter(e => e.theme === theme);
+}
+
 function renderResult() {
   const { quiz } = store.get();
   const pct = Math.round((quiz.score/quiz.qs.length)*100);
+  const isPerfect = quiz.score === quiz.qs.length && quiz.theme !== 'Todos';
   document.getElementById('qProgress').style.width = '100%';
+
+  if (isPerfect) {
+    SFX.play('perfect');
+    setTimeout(() => {
+      for (let i = 0; i < 5; i++) {
+        setTimeout(() => {
+          const el = document.querySelector('.quiz-result');
+          if (el) spawnParticles(el, 'correct');
+        }, i * 200);
+      }
+    }, 300);
+
+    const hall = getHallByTheme(quiz.theme);
+    const hallHTML = hall.length ? `
+      <div class="hall-list">
+        <div class="hall-title">🏅 Hall da Fama — ${quiz.theme}</div>
+        ${hall.slice(0,5).map((e,i)=>`<div class="hall-entry"><span class="hall-rank">${['🥇','🥈','🥉','4º','5º'][i]}</span><span class="hall-name">${e.name}</span><span class="hall-date">${e.date}</span></div>`).join('')}
+      </div>` : '';
+
+    document.getElementById('quizBody').innerHTML = `
+      <div class="quiz-result visible perfect-result">
+        <div class="result-medal">🥇</div>
+        <div class="result-score gold"><span>${quiz.score}</span>/${quiz.qs.length}</div>
+        <div class="result-msg perfect-msg">🎊 PERFEITO!<br><strong>Medalha de Ouro em ${quiz.theme}!</strong><br><small>Vous êtes un vrai expert!</small></div>
+        <div class="name-entry-box">
+          <p class="name-entry-label">✍️ Insira seu nome para o Hall da Fama:</p>
+          <div class="name-entry-row">
+            <input class="name-input" id="hallName" type="text" maxlength="30" placeholder="Seu nome aqui...">
+            <button class="btn-save-name" onclick="saveToHall()">🏆 Salvar</button>
+          </div>
+        </div>
+        ${hallHTML}
+        <button class="btn-restart" onclick="initQuiz('${quiz.theme}')">🔄 Jogar Novamente</button>
+      </div>`;
+
+    setTimeout(() => {
+      document.querySelector('.result-medal')?.classList.add('medal-pop');
+    }, 50);
+    return;
+  }
+
   const [e,m] = pct>=90?['🏆','Incrível! Vous êtes expert!']:pct>=70?['🎉','Très bien! Ótimo!']:pct>=50?['😊','Pas mal! Continue!']:['📚','Continue estudando!'];
   document.getElementById('quizBody').innerHTML = `
     <div class="quiz-result visible">
@@ -563,6 +887,19 @@ function renderResult() {
       <button class="btn-restart" onclick="initQuiz()">🔄 Jogar Novamente</button>
     </div>`;
 }
+
+function saveToHall() {
+  const nameEl = document.getElementById('hallName');
+  const name = nameEl?.value.trim();
+  if (!name) { nameEl?.focus(); return; }
+  const { quiz } = store.get();
+  // addToHallOfFame already updates db.hallOfFame + localStorage via saveHallOfFame()
+  addToHallOfFame(name, quiz.theme, quiz.score, quiz.qs.length);
+  toast('🥇 '+name+' adicionado ao Hall da Fama! Exporte o data.json para persistir.', 'success');
+  renderResult();
+}
+
+
 
 // Dismiss post when clicking outside the preview card area
 document.addEventListener('DOMContentLoaded', () => {
