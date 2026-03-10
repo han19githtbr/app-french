@@ -147,7 +147,7 @@ function generatePost() {
 // ══════════════════════════════
 function renderCard(p, el, dismissable = false) {
   el.innerHTML = `
-    <div class="post-card" style="cursor:default;${dismissable ? 'position:relative;z-index:6;' : ''}">
+    <div class="post-card" style="cursor:default;">
       <div class="bg-layer" style="background:${p.gradient}"></div>
       <div class="bg-pattern"></div>
       <div class="content-layer">
@@ -163,17 +163,12 @@ function renderCard(p, el, dismissable = false) {
         </div>
       </div>
     </div>`;
-  if (dismissable) {
-    document.getElementById('postDismiss').classList.add('active');
-  }
 }
 
 function dismissPost() {
-  // Only dismiss if click came directly from the overlay, not bubbling from inside
   const preview = document.getElementById('postPreview');
   preview.innerHTML = `<div class="empty-state"><div class="empty-icon">🖼️</div><p>Escolha um tema e clique em<br><strong>Gerar Publicação</strong></p></div>`;
   document.getElementById('postActions').style.display = 'none';
-  document.getElementById('postDismiss').classList.remove('active');
   store.set({ post: null });
 }
 
@@ -569,19 +564,18 @@ function renderResult() {
     </div>`;
 }
 
-// Replace inline onclick with JS listener to properly check target
+// Dismiss post when clicking outside the preview card area
 document.addEventListener('DOMContentLoaded', () => {
-  const overlay = document.getElementById('postDismiss');
-  if (overlay) {
-    overlay.addEventListener('click', (e) => {
-      // Do not dismiss if click is inside right-panel (buttons, card, etc.)
-      const rightPanel = document.querySelector('.right-panel');
-      const postActions = document.getElementById('postActions');
-      if (rightPanel && rightPanel.contains(e.target)) return;
-      if (postActions && postActions.contains(e.target)) return;
-      dismissPost();
-    });
-  }
+  document.addEventListener('click', (e) => {
+    if (!store.get().post) return;
+    const postPreview = document.getElementById('postPreview');
+    const postActions = document.getElementById('postActions');
+    const btnGen      = document.getElementById('btnGen');
+    if (postPreview && postPreview.contains(e.target)) return;
+    if (postActions && postActions.contains(e.target)) return;
+    if (btnGen      && btnGen.contains(e.target))      return;
+    dismissPost();
+  });
 });
 function closeModal() { document.getElementById('modalOverlay').classList.remove('open'); }
 function maybeClose(e) { if(e.target===document.getElementById('modalOverlay')) closeModal(); }
