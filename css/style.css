@@ -23,7 +23,7 @@ body::before{content:'';position:fixed;inset:0;background-image:url("data:image/
 header{position:sticky;top:0;z-index:100;background:rgba(8,9,14,.92);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);padding:0 1.5rem;height:64px;display:flex;align-items:center;justify-content:space-between;}
 .logo-header{display:flex;align-items:center;gap:10px;}
 .logo-header img{height:36px;width:36px;border-radius:8px;object-fit:cover;}
-.logo-text{font-family:'Playfair Display',serif;font-size:1.2rem;font-weight:700;background:linear-gradient(135deg,#fff 0%,var(--accent1) 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
+.logo-text{font-family:'Playfair Display',serif;font-size:1rem;font-weight:700;background:linear-gradient(135deg,#fff 0%,var(--accent1) 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
 nav{display:flex;gap:3px;}
 .nav-btn{background:transparent;border:1px solid transparent;color:var(--muted);padding:7px 14px;border-radius:100px;font-family:'DM Sans',sans-serif;font-size:.8rem;font-weight:500;cursor:pointer;transition:all .2s;white-space:nowrap;}
 .nav-btn:hover{color:var(--text);border-color:var(--border2);}
