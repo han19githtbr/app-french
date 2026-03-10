@@ -4,12 +4,90 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Français com 3 Nativos — Criador de Conteúdo</title>
+
+<!-- ═══ PWA META TAGS ═══ -->
+<meta name="application-name" content="FN3 Nativos">
+<meta name="description" content="Criador de conteúdo em Français para Instagram — gere, salve e baixe publicações.">
+<meta name="theme-color" content="#7c3aed">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="FN3 Nativos">
+<meta name="msapplication-TileColor" content="#0e0e16">
+<meta name="msapplication-TileImage" content="image/icon-144x144.png">
+
+<!-- ═══ PWA ICONS (Apple) ═══ -->
+<link rel="apple-touch-icon" href="image/icon-152x152.png">
+<link rel="apple-touch-icon" sizes="192x192" href="image/icon-192x192.png">
+
+<!-- ═══ MANIFEST ═══ -->
+<link rel="manifest" href="manifest.json">
+
+<!-- ═══ FAVICON ═══ -->
+<link rel="icon" type="image/png" sizes="32x32" href="image/icon-96x96.png">
+<link rel="icon" type="image/png" sizes="16x16" href="image/icon-72x72.png">
+
+<!-- ═══ FONTS & STYLES ═══ -->
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
 <link href="css/style.css" rel="stylesheet" type="text/css">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 
+<!-- ═══ PWA INSTALL BANNER STYLE ═══ -->
+<style>
+  #pwa-install-banner {
+    display: none;
+    position: fixed;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: linear-gradient(135deg, #1a0a2e, #2d1b69);
+    border: 1px solid rgba(124,58,237,.5);
+    border-radius: 16px;
+    padding: 14px 20px;
+    z-index: 9999;
+    box-shadow: 0 8px 32px rgba(0,0,0,.6);
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    max-width: 380px;
+    width: calc(100vw - 40px);
+    animation: slideUp .4s ease;
+  }
+  #pwa-install-banner.hidden { display: none !important; }
+  #pwa-install-banner img { width: 44px; height: 44px; border-radius: 10px; }
+  #pwa-install-banner .banner-text { flex: 1; }
+  #pwa-install-banner .banner-text strong { display: block; color: #fff; font-size: .9rem; font-family: 'DM Sans', sans-serif; }
+  #pwa-install-banner .banner-text span { color: rgba(255,255,255,.6); font-size: .78rem; font-family: 'DM Sans', sans-serif; }
+  #pwa-install-banner .banner-btns { display: flex; gap: 8px; flex-shrink: 0; }
+  #pwa-install-banner button {
+    border: none; border-radius: 8px; padding: 8px 14px; font-size: .8rem;
+    cursor: pointer; font-family: 'DM Sans', sans-serif; font-weight: 600;
+  }
+  #btn-pwa-install { background: #7c3aed; color: #fff; }
+  #btn-pwa-dismiss { background: rgba(255,255,255,.1); color: rgba(255,255,255,.7); }
+  @keyframes slideUp { from { opacity:0; transform: translateX(-50%) translateY(20px); } to { opacity:1; transform: translateX(-50%) translateY(0); } }
+
+  /* Offline indicator */
+  #offline-bar {
+    display: none;
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    background: #b45309;
+    color: #fff;
+    text-align: center;
+    padding: 8px;
+    font-size: .82rem;
+    font-family: 'DM Sans', sans-serif;
+    z-index: 10000;
+  }
+  #offline-bar.visible { display: block; }
+</style>
+
 </head>
 <body>
+
+<!-- OFFLINE BAR -->
+<div id="offline-bar">⚡ Você está offline — o app funciona normalmente com dados em cache.</div>
 
 <header>
   <div class="logo-header">
@@ -176,13 +254,99 @@
 <!-- TOAST -->
 <div class="toast" id="toast"></div>
 
-<!-- DISMISS OVERLAY: click outside post card to hide it -->
+<!-- DISMISS OVERLAY -->
 <div class="post-dismiss" id="postDismiss"></div>
 
 <!-- DOWNLOAD STAGE (off-screen 1080x1080) -->
 <div id="dlStage" style="position:fixed;left:-9999px;top:-9999px;width:1080px;height:1080px;overflow:hidden;pointer-events:none;"></div>
 
+<!-- PWA INSTALL BANNER -->
+<div id="pwa-install-banner" class="hidden">
+  <img src="image/icon-96x96.png" alt="FN3">
+  <div class="banner-text">
+    <strong>Instalar App</strong>
+    <span>Adicionar ao ecrã inicial para acesso rápido</span>
+  </div>
+  <div class="banner-btns">
+    <button id="btn-pwa-install">Instalar</button>
+    <button id="btn-pwa-dismiss">✕</button>
+  </div>
+</div>
+
 <script src="js/index.js"></script>
+
+<!-- ═══ SERVICE WORKER + PWA REGISTRATION ═══ -->
+<script>
+// ── Service Worker Registration ──────────────────────────────────────────────
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('/sw.js')
+      .then(reg => {
+        console.log('[PWA] SW registado:', reg.scope);
+
+        // Check for updates
+        reg.addEventListener('updatefound', () => {
+          const newWorker = reg.installing;
+          newWorker.addEventListener('statechange', () => {
+            if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
+              // New version available
+              if (confirm('🔄 Nova versão disponível! Recarregar para atualizar?')) {
+                newWorker.postMessage({ type: 'SKIP_WAITING' });
+                window.location.reload();
+              }
+            }
+          });
+        });
+      })
+      .catch(err => console.warn('[PWA] SW erro:', err));
+  });
+}
+
+// ── Offline / Online detection ────────────────────────────────────────────────
+const offlineBar = document.getElementById('offline-bar');
+function updateOnlineStatus() {
+  offlineBar.classList.toggle('visible', !navigator.onLine);
+}
+window.addEventListener('online',  updateOnlineStatus);
+window.addEventListener('offline', updateOnlineStatus);
+updateOnlineStatus();
+
+// ── Install Prompt (Add to Home Screen) ──────────────────────────────────────
+let deferredPrompt = null;
+const installBanner = document.getElementById('pwa-install-banner');
+const btnInstall    = document.getElementById('btn-pwa-install');
+const btnDismiss    = document.getElementById('btn-pwa-dismiss');
+
+window.addEventListener('beforeinstallprompt', (e) => {
+  e.preventDefault();
+  deferredPrompt = e;
+
+  // Show banner after 3 seconds
+  setTimeout(() => {
+    installBanner.classList.remove('hidden');
+  }, 3000);
+});
+
+btnInstall.addEventListener('click', async () => {
+  if (!deferredPrompt) return;
+  deferredPrompt.prompt();
+  const { outcome } = await deferredPrompt.userChoice;
+  console.log('[PWA] Install outcome:', outcome);
+  deferredPrompt = null;
+  installBanner.classList.add('hidden');
+});
+
+btnDismiss.addEventListener('click', () => {
+  installBanner.classList.add('hidden');
+});
+
+window.addEventListener('appinstalled', () => {
+  installBanner.classList.add('hidden');
+  deferredPrompt = null;
+  console.log('[PWA] App instalado com sucesso!');
+});
+</script>
+
 </body>
 </html>
 

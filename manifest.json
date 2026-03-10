@@ -1,0 +1,41 @@
+{
+  "name": "Français com 3 Nativos",
+  "short_name": "FN3 Nativos",
+  "description": "Criador de conteúdo em Français para Instagram — gere, salve e baixe publicações.",
+  "start_url": "/index.html",
+  "display": "standalone",
+  "orientation": "portrait-primary",
+  "background_color": "#0e0e16",
+  "theme_color": "#7c3aed",
+  "lang": "pt-BR",
+  "categories": ["education", "productivity"],
+  "icons": [
+    { "src": "image/icon-72x72.png",   "sizes": "72x72",   "type": "image/png" },
+    { "src": "image/icon-96x96.png",   "sizes": "96x96",   "type": "image/png" },
+    { "src": "image/icon-128x128.png", "sizes": "128x128", "type": "image/png" },
+    { "src": "image/icon-144x144.png", "sizes": "144x144", "type": "image/png" },
+    { "src": "image/icon-152x152.png", "sizes": "152x152", "type": "image/png" },
+    { "src": "image/icon-192x192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "image/icon-384x384.png", "sizes": "384x384", "type": "image/png" },
+    { "src": "image/icon-512x512.png", "sizes": "512x512", "type": "image/png" },
+    { "src": "image/maskable-192x192.png", "sizes": "192x192", "type": "image/png", "purpose": "maskable" },
+    { "src": "image/maskable-512x512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ],
+  "screenshots": [],
+  "shortcuts": [
+    {
+      "name": "Gerar Publicação",
+      "short_name": "Gerar",
+      "description": "Gere uma nova publicação para Instagram",
+      "url": "/index.html#generator",
+      "icons": [{ "src": "image/icon-96x96.png", "sizes": "96x96" }]
+    },
+    {
+      "name": "Quiz de Français",
+      "short_name": "Quiz",
+      "description": "Teste seus conhecimentos",
+      "url": "/index.html#quiz",
+      "icons": [{ "src": "image/icon-96x96.png", "sizes": "96x96" }]
+    }
+  ]
+}
